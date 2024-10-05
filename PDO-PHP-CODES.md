@@ -23,7 +23,7 @@ if ($pdo){
 
 ## Codes inside index.php for numbers 3 - 8.
 
-### Show codes demonstrating fetch_all(), use print_r, with " <pre> " tag in between.
+### Show codes demonstrating fetch_all(), use print_r, with pre tag in between.
 ```php
 <?php require_once 'core/dbConfig.php'; ?> 
 

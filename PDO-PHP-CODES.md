@@ -2,7 +2,7 @@
 
 
 ### Codes for dbConfig.php
-'''php
+```php
 <?php
 
 $host = "localhost";
@@ -19,12 +19,12 @@ if ($pdo){
     echo "connected successfully";
 }
 ?>
-'''
+```
 
 ## Codes inside index.php for numbers 3 - 8.
 
 ### Show codes demonstrating fetch_all(), use print_r, with "<pre>" tag in between.
-'''php
+```php
 <?php require_once 'core/dbConfig.php'; ?> 
 
 <!DOCTYPE html>
@@ -52,4 +52,4 @@ if ($pdo){
     ?>
 </body>
 </html>
-'''
+```

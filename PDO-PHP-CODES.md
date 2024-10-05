@@ -54,3 +54,35 @@ if ($pdo){
 </body>
 </html>
 ```
+
+
+### 1. Show codes demonstrating how fetch() is used, use print_r, with pre tag in between.
+```php
+<?php require_once 'core/dbConfig.php'; ?> 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <?php
+
+    // select everything from the shelter table
+    $stmt = $pdo->prepare("SELECT review.comment FROM review");
+    
+    // to check if the code is successfully executed
+    if ($stmt->execute()){
+        echo "<pre>";   // makes the output readable
+        print_r($stmt->fetch()); 
+        echo "<pre>";
+    }
+    else{
+        echo "Query failed.";
+    }
+    ?>
+</body>
+</html>
+```

@@ -29,8 +29,8 @@ CREATE Table adopting_parent (
 CREATE Table shelter (
   shelter_id  INT PRIMARY KEY,
   name  VARCHAR(100),
-  address VARCHAR(255),
-  phonenum  VARCHAR(50)
+  phonenum VARCHAR(255),
+  address  VARCHAR(50)
 );
 
 -- Table for application process
@@ -173,13 +173,14 @@ if ($pdo){
 <body>
     <?php
 
-    // select everything from the shelter table
-    $stmt = $pdo->prepare("SELECT review.comment FROM review");
+    // select everything from the pets table
+    $stmt = $pdo->prepare("SELECT * FROM pets ORDER BY pet_id ASC"); 
     
     // to check if the code is successfully executed
     if ($stmt->execute()){
         echo "<pre>";   // makes the output readable
-        print_r($stmt->fetch()); 
+        // using fetch method (single row only)
+        print_r($stmt->fetch()); // will retrieve only the very first row in pets table since it is set in ASC order
         echo "<pre>";
     }
     else{
@@ -192,33 +193,186 @@ if ($pdo){
 
 
 ### 5. Show codes demonstrating insertion of records to the database.
+```php
+<?php require_once 'core/dbConfig.php'; ?> 
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <?php
 
+    // inserting new record to the shelter table
+    $query = " INSERT INTO shelter (shelter_id, name, address, phonenum) 
+            VALUES (?,?,?,?)"; // "?" must complement the size or number of values
+    
+    $stmt = $pdo->prepare($query); 
 
-
-
-
-
-
-
+    // variable that will store the new data to be inserted in the database
+    $newRecord =  $stmt->execute(
+        [7, 'Second Chance Sanctuary', '627-740-4412', '4184 Oak Street']
+    );
+    // to check if the code is successfully executed
+    if ($newRecord){
+        echo "Query successfully inserted.";
+    }
+    else{
+        echo "Query failed.";
+    }
+    ?>
+</body>
+</html>
+```
 
 
 ### 6. Show codes demonstrate deletion of record to your database.
+```php
+<?php require_once 'core/dbConfig.php'; ?> 
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <?php
 
+    // deletion of Bob from the database
+    $query = "DELETE FROM pets WHERE name = 'Bob'"; 
+    
+    // statement to prepare the query
+    $stmt = $pdo->prepare($query); 
 
+    # statement is being executed
+    $executeQuery = $stmt->execute();
 
-
-
+    // to check if the code is successfully executed
+    if ($executeQuery){
+        echo "Record deletion was successful.";
+    }
+    else{
+        echo "Query failed.";
+    }
+    ?>
+</body>
+</html>
+```
 
 
 ### 7. Show codes demonstrating updating of record from your database.
+```php
+<?php require_once 'core/dbConfig.php'; ?> 
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <?php
 
+    // updating the application status of an adopting parent
+    $query = "UPDATE application
+            SET application_status = ?
+            WHERE application_id = 5"; 
+    
+    // statement to prepare the query
+    $stmt = $pdo->prepare($query); 
 
+    # statement is being executed
+    $executeQuery = $stmt->execute(["Denied"]);
 
-
-
+    // to check if the code is successfully executed
+    if ($executeQuery){
+        echo "Record was updated successfully.";
+    }
+    else{
+        echo "Query failed.";
+    }
+    ?>
+</body>
+</html>
+```
 
 
 ### 8. Show codes demonstrating an SQL query's result set is rendered on an html table.
+```php
+<?php require_once 'core/dbConfig.php'; ?> 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- table style -->
+    <style>
+        table {
+            width: 80%;
+            }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+            }
+        th {
+            background-color: white;
+            }
+    </style>
+
+</head>
+<body>
+    <?php
+
+    // selecting data from the adopting_parent table
+    $query = "SELECT adopting_parent_id, 
+                    firstname,
+                    lastname,
+                    phonenum,
+                    address
+                    FROM adopting_parent"; 
+    
+    // statement to prepare the query
+    $stmt = $pdo->prepare($query); 
+
+    // execute the query
+    if ($stmt->execute()) {
+        echo "Query was successfully executed";
+        $parent = $stmt->fetchAll(); // fetch all the results
+    } else {
+        echo "Error detected.";
+    }
+    ?>
+
+    <!-- table code -->
+    <table>
+        <tr> <!-- for table row -->
+            <th>Adopting Parent ID</th> <!-- for table columns -->
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone Number</th>
+            <th>Address</th>
+        </tr>
+            
+        <?php foreach ($parent as $row){ ?>
+            <tr>
+                <td><?php echo $row['adopting_parent_id']; ?></td>
+                <td><?php echo $row['firstname']; ?></td>
+                <td><?php echo $row['lastname']; ?></td>
+                <td><?php echo $row['phonenum']; ?></td>
+                <td><?php echo $row['address']; ?></td>
+            </tr>;
+        <?php } ?>
+    </table>
+</body>
+</html>
+```
